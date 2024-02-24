@@ -33,7 +33,30 @@ export default {
 
 ## The Documentation For the Project.
 
-The make a Custome Slider in Vite React and TypeScript.
+The make a Custome Slider in Vite React and TypeScript:
+
+- [Vite](https://vitejs.dev/)
+
+
+
 The use clsx library (https://www.npmjs.com/package/clsx) and add plagin for  join class to styles.
-The Slider has 4 small component with  handle of slider. 
+To run the example locally:
+
+
+The Slider has 4 small component with  handle of slider:
+
 The global Types in  types.ts,  url is [Slider/types.ts].
+
+
+
+In [index.tsx] I use the Mouse Event and Touch Event functional:
+
+
+The run [npm run dev] :
+
+You can see how it works on the  Local: [http://localhost:5176/]:
+
+
+The run [npm run dev -- --host]:
+
+And Network [http://192.168.2.104:5176/]:

@@ -1,6 +1,7 @@
 import {
   FC,
   MouseEvent,
+  TouchEvent,
   memo,
   useCallback,
   useEffect,
@@ -31,6 +32,7 @@ type SliderProps = {
 };
 
 const Slider: FC<SliderProps> = memo(({ positions, value, onChange }) => {
+
   const [, setActiveValue] = useState(0);
   const [offsetX, setOffsetX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -52,6 +54,10 @@ const Slider: FC<SliderProps> = memo(({ positions, value, onChange }) => {
     },
     [breakpoints]
   );
+
+  /**
+   *  Mouse Event Function.
+   */
 
   const handleMouseDown = useCallback((event: MouseEvent) => {
     event.preventDefault();
@@ -95,6 +101,51 @@ const Slider: FC<SliderProps> = memo(({ positions, value, onChange }) => {
     }
   };
 
+  /**
+   *  Touch Event Function.
+  */
+
+  const handleTouchStart = useCallback((event: TouchEvent) => {
+    const target = event.target as HTMLDivElement;
+  
+    if (target.id === "thumb") {
+      setIsDragging(true);
+    }
+  }, []);
+
+  const handleTouchEnd = useCallback((event: TouchEvent) => {
+    if (!isDragging) {
+      return;
+    }
+    setIsDragging(false);
+    const touch = event.changedTouches[0];
+    // @ts-ignore
+    //  This line is necessary for using the ts ignore.
+    const thumbPosition = calculateThumbPosition(railRef, touch);
+
+    if (thumbPosition !== undefined) {
+      handleActiveValueChange(thumbPosition, onChange);
+    }
+  }, [isDragging, setIsDragging, handleActiveValueChange, onChange]);
+
+  const handleTouchMove = useCallback(
+    (event: TouchEvent) => {
+      if (!isDragging) {
+        return;
+      }
+
+      const touch = event.changedTouches[0];
+      // @ts-ignore
+      //  This line is necessary for using the ts ignore.
+      const thumbPosition = calculateThumbPosition(railRef, touch);
+
+      if (thumbPosition !== undefined) {
+        handleActiveValueChange(thumbPosition);
+      }
+    },
+    [isDragging, handleActiveValueChange]
+  );
+  
   // The UseEffect on value set/change calculate offsetX and set active value.
   useEffect(() => {
     const isBreakpointsCalculated = !!breakpoints.length;
@@ -142,6 +193,9 @@ const Slider: FC<SliderProps> = memo(({ positions, value, onChange }) => {
       onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onTouchEnd={handleTouchEnd}
+      onTouchMove={handleTouchMove}
+      onTouchStart={handleTouchStart}
     >
       <Rail ref={railRef} isDragging={isDragging}>
         <Thumb position={offsetX} isDragging={isDragging} />
