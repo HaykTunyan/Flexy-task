@@ -33,7 +33,7 @@ type SliderProps = {
 
 const Slider: FC<SliderProps> = memo(({ positions, value, onChange }) => {
 
-  const [, setActiveValue] = useState(0);
+  const [activeValue  , setActiveValue] = useState(0);
   const [offsetX, setOffsetX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [breakpoints, setBreakpoints] = useState<Breakpoints>([]);
@@ -197,6 +197,12 @@ const Slider: FC<SliderProps> = memo(({ positions, value, onChange }) => {
       onTouchMove={handleTouchMove}
       onTouchStart={handleTouchStart}
     >
+      <div className="flex flex-start flex-col py-2">
+        <p  className="text-lg text-purple-500">
+          <span className="text-purple-500 font-bold" > Position : </span>
+          <span  className=" font-light text-purple-500"> {activeValue} </span>
+        </p>
+      </div>
       <Rail ref={railRef} isDragging={isDragging}>
         <Thumb position={offsetX} isDragging={isDragging} />
         <Track width={offsetX} />
